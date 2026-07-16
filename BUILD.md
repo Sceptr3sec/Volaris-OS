@@ -44,3 +44,18 @@ a separate Unix user.
 - Source tarballs and the entire build tree (`lfs-root/`) are intentionally
   excluded from version control (see `.gitignore`) — regeneratable from
   these scripts/instructions, and far too large for a git repo.
+
+## Known issue: GCC Pass 1 internal limits.h
+
+If a Chapter 6 package fails to build with an error like
+`#error "Assumed value of MB_LEN_MAX wrong"` in a glibc header, it means
+the GCC Pass 1 internal `limits.h` was left as its partial, pre-glibc
+placeholder version. Fix by regenerating it from GCC's own source fragments:
+
+    cd $LFS/sources/gcc-15.2.0
+    cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+      `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+
+This step is normally done immediately after GCC Pass 1's `make install`
+(before Glibc), per LFS 13.0-systemd Section 5.3. It was applied
+retroactively here after M4 exposed the issue in Chapter 6.
