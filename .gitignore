@@ -1,0 +1,20 @@
+# Downloaded/extracted source packages
+sources/
+build/
+tmp/
+
+# Build output
+output/
+*.iso
+
+# Compiled objects and toolchain artifacts
+*.o
+*.a
+*.so
+tools/
+
+# Logs
+*.log
+
+# Editor
+.vscode/settings.json
