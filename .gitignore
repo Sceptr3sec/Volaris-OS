@@ -1,0 +1,12 @@
+# Entire LFS build tree — sources, compiled toolchain, extracted tarballs.
+# Gigabytes of regeneratable build output. Never commit this.
+lfs-root/
+
+# Misc build artifacts if they appear elsewhere
+build/
+tmp/
+output/
+*.iso
+*.o
+*.a
+*.log
