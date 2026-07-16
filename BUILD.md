@@ -59,3 +59,12 @@ placeholder version. Fix by regenerating it from GCC's own source fragments:
 This step is normally done immediately after GCC Pass 1's `make install`
 (before Glibc), per LFS 13.0-systemd Section 5.3. It was applied
 retroactively here after M4 exposed the issue in Chapter 6.
+
+## Chapter 6 — Temporary Tools (T1.4)
+
+All temporary tools built via `scripts/02_build_temp_tools.sh`:
+M4, Ncurses, Bash, Coreutils, Diffutils, File, Findutils, Gawk, Grep, Gzip,
+Make, Patch, Sed, Tar, Xz, Binutils (Pass 2), GCC (Pass 2).
+
+Script is idempotent — safe to re-run; completed packages are tracked via
+marker files in `logs/.done/` and skipped automatically.
