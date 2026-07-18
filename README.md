@@ -11,7 +11,7 @@ See `BUILD.md` for build instructions.
 - [x] T1.2 — LFS directory layout created
 - [x] T1.3 — Cross-compilation toolchain (binutils, gcc-pass1, glibc, libstdc++)
 - [x] T1.4 — Temporary tools (Chapter 6)
-- [ ] T1.5 — Chroot and final system packages
+- [x] T1.5 — Chroot entered, final system built (Chapters 7-8 complete)
 - [ ] T1.6 — Kernel configuration
 - [ ] T1.7 — GRUB bootloader
 - [ ] T1.8 — Bootable VM image validation
