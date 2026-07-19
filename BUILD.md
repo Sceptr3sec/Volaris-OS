@@ -68,3 +68,41 @@ Make, Patch, Sed, Tar, Xz, Binutils (Pass 2), GCC (Pass 2).
 
 Script is idempotent — safe to re-run; completed packages are tracked via
 marker files in `logs/.done/` and skipped automatically.
+
+## Custom Initramfs (RAM-Resident Boot)
+
+Located at `initramfs/init`. Built with a statically-linked BusyBox
+(1.36.1, CONFIG_TC disabled due to a GCC-15 incompatibility, CONFIG_STATIC=y).
+
+Mechanism: mounts /proc, /sys, /dev; creates a tmpfs at /mnt/runtime
+(size=8G, sized for current ~6.5GB base system + headroom); mounts the
+base OS partition read-only, copies it into tmpfs, unmounts it immediately;
+switch_root's into the tmpfs copy, execing the real /sbin/init (systemd).
+
+Verified live: after boot, `mount | grep sda` returns nothing — the disk
+is fully disconnected from the running system, root is confirmed tmpfs.
+This is the mechanism backing NFR-01 (no persistent forensic artifacts)
+and TC-02 (RAM-only filesystem verification).
+
+Known deviation: base OS is currently ~6.5GB, exceeding the ~4GB target
+in Section 1.7 of the planning doc. Trimming (docs, man pages, unused
+locales) is a follow-up task before this fully meets NFR-03.
+
+## Custom Initramfs (RAM-Resident Boot)
+
+Located at `initramfs/init`. Built with a statically-linked BusyBox
+(1.36.1, CONFIG_TC disabled due to a GCC-15 incompatibility, CONFIG_STATIC=y).
+
+Mechanism: mounts /proc, /sys, /dev; creates a tmpfs at /mnt/runtime
+(size=8G, sized for current ~6.5GB base system + headroom); mounts the
+base OS partition read-only, copies it into tmpfs, unmounts it immediately;
+switch_root's into the tmpfs copy, execing the real /sbin/init (systemd).
+
+Verified live: after boot, `mount | grep sda` returns nothing — the disk
+is fully disconnected from the running system, root is confirmed tmpfs.
+This is the mechanism backing NFR-01 (no persistent forensic artifacts)
+and TC-02 (RAM-only filesystem verification).
+
+Known deviation: base OS is currently ~6.5GB, exceeding the ~4GB target
+in Section 1.7 of the planning doc. Trimming (docs, man pages, unused
+locales) is a follow-up task before this fully meets NFR-03.
