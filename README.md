@@ -20,3 +20,8 @@ See `BUILD.md` for build instructions.
 ## Build
 
 See [BUILD.md](./BUILD.md).
+
+## Test Evidence Captured
+- TC-02 (RAM-only filesystem): verified — root is tmpfs, boot media disconnected post-boot
+- TC-04 (session cleanup on shutdown): verified — sentinel file test, data does not survive reboot
+- TC-05 (firewall default-deny): verified — nmap scan from host shows 999/1000 ports filtered
