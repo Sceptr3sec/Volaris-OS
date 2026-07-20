@@ -15,7 +15,7 @@ See `BUILD.md` for build instructions.
 - [x] T1.6 — Kernel configured and built
 - [x] T1.7 — GRUB bootloader configured
 - [x] T1.8 — Bootable VM image validated (QEMU, persistent-disk boot)
-- [ ] T1.9 — Environment documentation
+- [x] Bootable ISO produced and verified (Day 4 checkpoint)
 
 ## Build
 
