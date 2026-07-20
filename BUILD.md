@@ -153,3 +153,25 @@ Service loads automatically at boot via nftables.service
 (DefaultDependencies=no, After=sysinit.target, Before=basic.target,
 TimeoutStartSec=15) — deliberately ordered to never block console/login
 availability even if the service itself fails.
+
+## Cybersecurity Toolkit (Day 6 — complete)
+
+Three tools built and verified functional in the actual booted ISO
+(not just chroot, given the CPU-portability lessons from nftables):
+
+- **htop 3.4.1** — process/resource monitoring
+- **tcpdump 4.99.5** (+ libpcap 1.10.5) — network traffic capture
+- **nmap 7.95** — network scanning/enumeration (built with bundled Lua/NSE,
+  libssh2, linked against system OpenSSL/zlib/pcre2/libpcap)
+
+All three built proactively with `-march=x86-64 -mtune=generic` to avoid
+a repeat of the GMP CPU-auto-detection crash found during Day 5 — no
+illegal-instruction issues observed in the actual QEMU-emulated boot.
+
+## Persistence Verification (Day 6 — TC-02/TC-04 evidence)
+
+- TC-02 confirmed: post-boot, `mount | grep sda` / `mount | grep sr0`
+  return nothing — boot media is fully disconnected after RAM hydration.
+- TC-04 confirmed: created `/root/sentinel.txt` with known content,
+  rebooted from the same ISO, file confirmed absent
+  (`cat: No such file or directory`) — no session data survives a reboot.
