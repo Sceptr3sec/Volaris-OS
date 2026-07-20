@@ -9,12 +9,22 @@ mount -t devtmpfs devtmpfs /dev
 echo "Mounting tmpfs root at /mnt/runtime..."
 mount -t tmpfs -o size=8G tmpfs /mnt/runtime
 
-
-echo "Mounting base system (read-only) to hydrate RAM..."
+echo "Locating boot media..."
 mkdir -p /mnt/base
-mount -t ext4 -o ro /dev/sda1 /mnt/base
+for try in "/dev/sr0:iso9660" "/dev/sda1:ext4" "/dev/vda1:ext4"; do
+  dev="${try%%:*}"
+  fstype="${try##*:}"
+  if [ -b "$dev" ]; then
+    mount -t "$fstype" -o ro "$dev" /mnt/base 2>/dev/null && break
+  fi
+done
+
 echo "Copying base system into tmpfs..."
-cp -a /mnt/base/* /mnt/runtime/
+if [ -d /mnt/base/volaris-base ]; then
+  cp -a /mnt/base/volaris-base/* /mnt/runtime/
+else
+  cp -a /mnt/base/* /mnt/runtime/
+fi
 umount /mnt/base
 
 echo "Switching to RAM-resident root..."

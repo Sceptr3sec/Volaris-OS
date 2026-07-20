@@ -106,3 +106,22 @@ and TC-02 (RAM-only filesystem verification).
 Known deviation: base OS is currently ~6.5GB, exceeding the ~4GB target
 in Section 1.7 of the planning doc. Trimming (docs, man pages, unused
 locales) is a follow-up task before this fully meets NFR-03.
+
+## Bootable ISO (Day 4 checkpoint — complete)
+
+`volaris-os.iso` (~6.4GB) built via `grub-mkrescue`, containing:
+- Custom kernel (linux-6.18.10) + GRUB
+- Custom initramfs (BusyBox-based, RAM-resident switch_root mechanism)
+- Full base OS system (`volaris-base/`, ~6.4GB) embedded directly on the ISO
+
+Init script searches multiple device candidates (/dev/sr0 for ISO boot,
+/dev/sda1 for raw disk image testing) and detects whether the base OS is
+at a `volaris-base` subdirectory (ISO layout) or the mount root directly
+(raw disk image layout) — one script correctly handles both.
+
+Verified: boots from ISO in QEMU, reaches login, root confirmed as tmpfs,
+boot media confirmed unmounted post-boot — matches NFR-01/TC-02.
+
+Build command (must run as root — iso-root/volaris-base contains
+root-owned files with restrictive permissions unprivileged xorriso can't read):
+    sudo grub-mkrescue -o volaris-os.iso iso-root
