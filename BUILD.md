@@ -175,3 +175,18 @@ illegal-instruction issues observed in the actual QEMU-emulated boot.
 - TC-04 confirmed: created `/root/sentinel.txt` with known content,
   rebooted from the same ISO, file confirmed absent
   (`cat: No such file or directory`) — no session data survives a reboot.
+
+## Final Image Size
+
+Base system: ~4.3GB (down from an initial ~6.5GB — a stray Chapter 7
+backup archive, lfs-temp-tools-13.0-systemd.tar.xz, had been mistakenly
+left at the filesystem root and was being copied into every ISO rebuild;
+removed once discovered while investigating GitHub's 2GB release asset
+limit). Final size is now consistent with the ~4GB target in Section 1.7
+of the project planning document.
+
+Compressed ISO (xz -6): ~944MB. Uncompressed: ~6.5GB total ISO
+(includes the ~4.3GB base system plus GRUB/kernel/initramfs).
+
+Released as a GitHub Release asset (v1.0-final), per Section 6.8 of the
+project plan, rather than committed to the repository directly.
