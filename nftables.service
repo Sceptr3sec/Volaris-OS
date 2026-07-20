@@ -1,0 +1,16 @@
+[Unit]
+Description=Volaris OS nftables firewall
+DefaultDependencies=no
+After=sysinit.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+TimeoutStartSec=15
+ExecStart=/usr/sbin/nft -f /etc/nftables.conf
+ExecReload=/usr/sbin/nft -f /etc/nftables.conf
+ExecStop=/usr/sbin/nft flush ruleset
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

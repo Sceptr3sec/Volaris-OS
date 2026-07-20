@@ -125,3 +125,31 @@ boot media confirmed unmounted post-boot — matches NFR-01/TC-02.
 Build command (must run as root — iso-root/volaris-base contains
 root-owned files with restrictive permissions unprivileged xorriso can't read):
     sudo grub-mkrescue -o volaris-os.iso iso-root
+
+## Firewall / Hardening (Day 5 — complete)
+
+nftables 1.1.1 built (not part of base LFS — required libmnl 1.0.5,
+libnftnl 1.2.9, libedit, jansson as additional dependencies).
+
+Two real bugs found and fixed during verification:
+1. Kernel never had CONFIG_NF_TABLES enabled — base LFS kernel config
+   doesn't include netfilter/nftables support. Rebuilt kernel with
+   NF_TABLES, NF_CONNTRACK, and related options as built-in (=y), not
+   modules — avoids a module-load timing race at early boot.
+2. GMP (a build dependency of nftables) auto-detects and compiles for
+   the exact host CPU by default, causing "illegal instruction" crashes
+   when run on a different/more conservative CPU (e.g., QEMU's default
+   emulated CPU vs. the WSL2 host's real CPU used during chroot builds).
+   Fixed by rebuilding GMP with --host=none-linux-gnu to force portable
+   code generation. Rebuilt nftables afterward to link against the fix.
+
+Default-deny policy (see nftables.conf) verified via nmap from host:
+999/1000 scanned ports report filtered (no-response). The one open port
+(53/tcp) is QEMU's own NAT gateway DNS, not a Volaris service — confirmed
+via `ss -tlnp` showing systemd-resolved bound only to 127.0.0.53/54
+(loopback), never externally reachable.
+
+Service loads automatically at boot via nftables.service
+(DefaultDependencies=no, After=sysinit.target, Before=basic.target,
+TimeoutStartSec=15) — deliberately ordered to never block console/login
+availability even if the service itself fails.
